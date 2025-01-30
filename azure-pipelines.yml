@@ -3,6 +3,7 @@ trigger:
 
 variables:
   buildConfiguration: 'Release'
+  CACHE_RESTORED: 'false'
 
 stages:
 - stage: 'Build'
@@ -24,15 +25,19 @@ stages:
       displayName: 'Use .NET SDK $(dotnetSdkVersion)'
       inputs:
         version: '$(dotnetSdkVersion)'
-
+    - task: Cache@2
+      inputs:
+        key: 'npm | "$(Agent.OS)" | $(Build.SourcesDirectory)/package-lock.json'
+        path: '(Build.SourcesDirectory)/node_modules'
+        cacheHitVar: 'CACHE_RESTORED'
     - task: Npm@1
       displayName: 'Run npm install'
       inputs:
         verbose: false
+      condition: ne(variables.CACHE_RESTORED, 'true')
 
     - script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
       displayName: 'Compile Sass assets'
-
     - task: gulp@1
       displayName: 'Run gulp tasks'
 
