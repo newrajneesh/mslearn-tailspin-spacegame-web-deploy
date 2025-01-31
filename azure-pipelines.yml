@@ -33,6 +33,8 @@ stages:
     - task: Npm@1
       displayName: 'Run npm install'
       inputs:
+        command: custom
+        customCommand: 'ci'
         verbose: false
       condition: ne(variables.CACHE_RESTORED, 'true')
 
