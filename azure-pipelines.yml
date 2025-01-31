@@ -27,8 +27,8 @@ stages:
         version: '$(dotnetSdkVersion)'
     - task: Cache@2
       inputs:
-        key: 'npm | "$(Agent.OS)" | $(Build.SourcesDirectory)/package-lock.json'
-        path: '(Build.SourcesDirectory)/node_modules'
+        key: 'npm | "$(Agent.OS)" | $(Build.SourcesDirectory)/package.json'
+        path: '$(System.DefaultWorkingDirectory)/node_modules'
         cacheHitVar: 'CACHE_RESTORED'
     - task: Npm@1
       displayName: 'Run npm install'
